@@ -1,0 +1,95 @@
+Turbo Assembler	 Version 3.1	    26/12/21 01:00:14	    Page 1
+io.ASM
+
+
+
+      1	0000			     kode segment
+      2				     org 100h
+      3				     assume cs:	kode, ds: data;
+      4	0100			     begin:
+      5	0100  B8 0000s			     mov ax, data
+      6	0103  8E D8			     mov ds, ax
+      7				     ; Вывод запрса на ввод двух чисел
+      8	0105  B4 09			     mov ah, 09h
+      9	0107  BA 0000r			     mov dx, offset zapros
+     10	010A  CD 21			     int 21h
+     11				     ; Ввод двух чисел
+     12	010C  B9 0002			     mov cx, 2
+     13	010F  B4 08		     inpt:  mov	ah, 08h
+     14	0111  CD 21			     int 21h
+     15					     ; Цифровой	символ?
+     16	0113  3C 30			     cmp al, '0'
+     17	0115  72 F8			     jb	inpt	   ; Если ниже нуля повторный ввод
+     18	0117  3C 39			     cmp al, '9'
+     19	0119  77 F4			     ja	inpt	   ; Если больше девяти	повторный ввод
+     20					     ; вывод цифры
+     21	011B  B4 02			     mov ah, 02h
+     22	011D  8A D0			     mov dl, al
+     23	011F  CD 21			     int 21h
+     24	0121  E2 EC			     loop inpt	   ; Вывод следующей цифры
+     25				     ; Задержка	для просмотра результатов
+     26	0123  B4 01			     mov ah, 01h
+     27	0125  CD 21			     int 21h
+     28				     ; Выход
+     29				     ;	      mov ax, 4C00h
+     30				     ;	      int 21h
+     31				     ;wait
+     32	0127  40			     inc ax
+     33	0128  B4 09			     mov ah,09h
+     34	012A  BA 0017r			     mov dx,offset String
+     35	012D  CD 21			     int 21h
+     36
+     37	012F  B4 10			     mov ah,10h
+     38	0131  CD 16			     int 16h
+     39	0133  B4 4C			     mov ah,4ch
+     40	0135  B0 00			     mov al,0
+     41	0137  CD 21			     int 21h
+     42	0139			     kode ends
+     43				     ;--------------------------------------------------
+     44	0000			     data segment
+     45	0000  45 6E 74 65 72 20	74+	     zapros db 'Enter two numbers ->  $'
+     46	      77 6F 20 6E 75 6D	62+
+     47	      65 72 73 20 2D 3E	20+
+     48	      20 24
+     49	0017  70 72 65 73 73 20	61+	     String db 'press any key...$'
+     50	      6E 79 20 6B 65 79	2E+
+     51	      2E 2E 24
+     52	0028			     data ends
+     53				     ;--------------------------------------------------
+     54	0000			     stk segment stack
+     55	0000  0100*(00)			     db	100h dup (0)
+     56	0100			     stk ends
+     57				     ;--------------------------------------------------
+Turbo Assembler	 Version 3.1	    26/12/21 01:00:14	    Page 2
+io.ASM
+
+
+
+     58				     end begin
+Turbo Assembler	 Version 3.1	    26/12/21 01:00:14	    Page 3
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "26/12/21"
+??FILENAME			  Text	 "io	  "
+??TIME				  Text	 "01:00:14"
+??VERSION			  Number 030A
+@CPU				  Text	 0101H
+@CURSEG				  Text	 STK
+@FILENAME			  Text	 IO
+@WORDSIZE			  Text	 2
+BEGIN				  Near	 KODE:0100
+INPT				  Near	 KODE:010F
+STRING				  Byte	 DATA:0017
+ZAPROS				  Byte	 DATA:0000
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+DATA				  16  0028 Para	  none
+KODE				  16  0139 Para	  none
+STK				  16  0100 Para	  Stack
+

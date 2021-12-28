@@ -1,0 +1,219 @@
+Turbo Assembler	 Version 3.1	    26/12/21 01:08:44	    Page 1
+flb2.ASM
+
+
+
+      1				       ;------------------------------------------------------
+      2				       ;считать	следующий символ с клавиатуры, вывод в ax
+      3				       nextCharAX macro
+      4					 mov ah, 08h
+      5					 int 21h
+      6				       endm
+      7				       ;------------------------------------------------------
+      8				       ;вывод без переноса строки
+      9				       print macro a
+     10					 mov ah, 09h
+     11					 mov dx, offset	a
+     12					 int 21h
+     13				       endm
+     14				       ;------------------------------------------------------
+     15				       ;вывод с	переносом строки
+     16				       println macro a
+     17					 ifb <a>
+     18					   print endl
+     19					 else
+     20					   print a
+     21					   print endl
+     22					 endif
+     23				       endm
+     24				       ;------------------------------------------------------
+     25				       ;пауза
+     26				       pause macro
+     27					 mov ah,10h
+     28					 int 16h
+     29				       endm
+     30				       ;------------------------------------------------------
+     31				       ;завершение процесса
+     32				       endProcess macro
+     33					 println
+     34					 println onProcessEnd
+     35					 ;pause
+     36					 ;Не знаю почему, но мне кажется, завершать программу 4	карбоксильными группами	- это	    +
+     37				     достойно!
+     38					 mov ax, 4C00h
+     39					 int 21h
+     40				       endm
+     41				       ;пролог и эпилог	к процедуре.
+     42				       prol macro
+     43					 push bp
+     44					 mov bp,sp
+     45				       endm
+     46				       return macro
+     47					 pop bp
+     48					 ret
+     49				       endm
+     50
+     51				       ;code--------------------------------------------------
+     52	0000			     cat segment
+     53				     org 100h
+     54				     assume cs:cat, ds:data, ss:stk
+     55				     ;процедуры.
+     56	0100			       outp proc
+     57					 println outStr2
+Turbo Assembler	 Version 3.1	    26/12/21 01:08:44	    Page 2
+flb2.ASM
+
+
+
+1    58					 ifb <outStr2>
+1    59					   print endl
+1    60					 else
+1    61					   print outStr2
+2    62	0100  B4 09			 mov ah, 09h
+2    63	0102  BA 000Cr			 mov dx, offset	outStr2
+2    64	0105  CD 21			 int 21h
+1    65					   print endl
+2    66	0107  B4 09			 mov ah, 09h
+2    67	0109  BA 002Er			 mov dx, offset	endl
+2    68	010C  CD 21			 int 21h
+1    69					 endif
+     70	010E  C3			 ret
+     71	010F			       outp endp
+     72				     ;	increment proc
+     73				     ;	  push bp
+     74				     ;	  mov bp,sp
+     75				     ;	  mov dx,[bp+4]
+     76				     ;	  mov ax,[dx]
+     77				     ;	  inc ax
+     78				     ;	  mov [dx],ax
+     79				     ;	  pop bp
+     80				     ;	  ret
+     81				     ;	increment endp
+     82	010F			     main:
+     83	010F  33 C0		       xor ax,ax
+     84	0111  B8 0000s		       mov ax,data
+     85	0114  8E D8		       mov ds,ax
+     86	0116  BA 0031r		       lea dx,number
+     87	0119  8B		       mov ax,[dx]
+**Error** flb2.ASM(74) Illegal indexing	mode
+     88	011A  40		       inc ax
+     89	011B  89		       mov [dx],ax
+**Error** flb2.ASM(76) Illegal indexing	mode
+     90				       println outStr1
+1    91					 ifb <outStr1>
+1    92					   print endl
+1    93					 else
+1    94					   print outStr1
+2    95	011C  B4 09			 mov ah, 09h
+2    96	011E  BA 0000r			 mov dx, offset	outStr1
+2    97	0121  CD 21			 int 21h
+1    98					   print endl
+2    99	0123  B4 09			 mov ah, 09h
+2   100	0125  BA 002Er			 mov dx, offset	endl
+2   101	0128  CD 21			 int 21h
+1   102					 endif
+    103	012A  E8 FFD3		       call outp
+    104				       ;push number
+    105				       endProcess
+1   106					 println
+2   107					 ifb <>
+2   108					   print endl
+3   109	012D  B4 09			 mov ah, 09h
+3   110	012F  BA 002Er			 mov dx, offset	endl
+3   111	0132  CD 21			 int 21h
+2   112					 else
+Turbo Assembler	 Version 3.1	    26/12/21 01:08:44	    Page 3
+flb2.ASM
+
+
+
+2   113					   print
+2   114					   print endl
+2   115					 endif
+1   116					 println onProcessEnd
+2   117					 ifb <onProcessEnd>
+2   118					   print endl
+2   119					 else
+2   120					   print onProcessEnd
+3   121	0134  B4 09			 mov ah, 09h
+3   122	0136  BA 001Er			 mov dx, offset	onProcessEnd
+3   123	0139  CD 21			 int 21h
+2   124					   print endl
+3   125	013B  B4 09			 mov ah, 09h
+3   126	013D  BA 002Er			 mov dx, offset	endl
+3   127	0140  CD 21			 int 21h
+2   128					 endif
+1   129					 ;pause
+1   130					 ;Не знаю почему, но мне кажется, завершать программу 4	карбоксильными группами	- это	    +
+    131				     достойно!
+1   132	0142  B8 4C00			 mov ax, 4C00h
+1   133	0145  CD 21			 int 21h
+    134	0147			     cat ends
+    135				       ;data segment--------------------------------
+    136	0000			     data segment
+    137	0000  6C 65 73 73 20 6F	70+    outStr1 db 'less	ops!? $'
+    138	      73 21 3F 20 24
+    139	000C  6C 65 73 73 20 65	76+    outStr2 db 'less	everything! $'
+    140	      65 72 79 74 68 69	6E+
+    141	      67 21 20 24
+    142	001E  65 6E 64 69 6E 67	20+    onProcessEnd db "ending this up!$"
+    143	      74 68 69 73 20 75	70+
+    144	      21 24
+    145	002E  0D 0A 24		       endl db 0dh,0ah,'$'
+    146	0031  00		       number db 2323h
+**Error** flb2.ASM(88) Value out of range
+    147	0032			     data ends
+    148				     ;stack segment-------------------------------
+    149	0000			     stk segment stack
+    150	0000  0100*(00)		       db 100h dup (0)
+    151	0100			     stk ends
+    152
+    153				     end main
+Turbo Assembler	 Version 3.1	    26/12/21 01:08:44	    Page 4
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "26/12/21"
+??FILENAME			  Text	 "flb2	  "
+??TIME				  Text	 "01:08:44"
+??VERSION			  Number 030A
+@CPU				  Text	 0101H
+@CURSEG				  Text	 STK
+@FILENAME			  Text	 FLB2
+@WORDSIZE			  Text	 2
+ENDL				  Byte	 DATA:002E
+MAIN				  Near	 CAT:010F
+NUMBER				  Byte	 DATA:0031
+ONPROCESSEND			  Byte	 DATA:001E
+OUTP				  Near	 CAT:0100
+OUTSTR1				  Byte	 DATA:0000
+OUTSTR2				  Byte	 DATA:000C
+
+Macro Name
+
+ENDPROCESS
+NEXTCHARAX
+PAUSE
+PRINT
+PRINTLN
+PROL
+RETURN
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+CAT				  16  0147 Para	  none
+DATA				  16  0032 Para	  none
+STK				  16  0100 Para	  Stack
+Turbo Assembler	 Version 3.1	    26/12/21 01:08:44	    Page 5
+Error Summary
+
+
+
+**Error** flb2.ASM(74) Illegal indexing	mode
+**Error** flb2.ASM(76) Illegal indexing	mode
+**Error** flb2.ASM(88) Value out of range
+

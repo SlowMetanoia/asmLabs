@@ -1,0 +1,48 @@
+Turbo Debugger Log
+ CPU code    : 53fe:0109 8B C8 
+CPU 80486
+  cs:0100 BE2F01         mov    si,012F                      
+  cs:0103 BF3001         mov    di,0130                      
+  cs:0106 B80800         mov    ax,0008                      
+  cs:0109 8BC8           mov    cx,ax                        
+  cs:010B D1E9           shr    cx,1                         
+  cs:010D 90             nop                                 
+  cs:010E 8A14           mov    dl,[si]                      
+  cs:0110 8815           mov    [di],dl                      
+  cs:0112 47             inc    di                           
+  cs:0113 4E             dec    si                           
+  cs:0114 E2F7           loop   010D                         
+  cs:0116 8BC8           mov    cx,ax                        
+  cs:0118 D1E9           shr    cx,1                         
+  cs:011A 90             nop                                 
+  cs:011B 90             nop                                 
+CPU 80486
+  ax 0008   
+  bx F1F2   
+  cx 0004   
+  dx 0104   
+  si 012B   
+  di 0134   
+  bp 0000   
+  sp 007E   
+  ds 53FE   
+  es 53FE   
+  ss 53FE   
+  cs 53FE   
+  ip 011B   
+CPU 80486
+  cs:011B90             nop                                 
+  cs:011C 2BF1           sub    si,cx                        
+  cs:011E 46             inc    si                           
+  cs:011F 90             nop                                 
+  cs:0120 8A14           mov    dl,[si]                      
+  cs:0122 8815           mov    [di],dl                      
+  cs:0124 47             inc    di                           
+  cs:0125 46             inc    si                           
+  cs:0126 E2F8           loop   0120                         
+  cs:0128 0001           add    [bx+di],al                   
+  cs:012A 0203           add    al,[bp+di]                   
+  cs:012C 0405           add    al,05                        
+  cs:012E 06             push   es                           
+  cs:012F 07             pop    es                           
+  cs:0130 07             pop    es                           
