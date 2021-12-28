@@ -159,6 +159,7 @@ data segment
   minElemBark     db 'Min element:$'
   maxElemBark     db 'Max element:$'
   sumBark         db 'Sum:$'
+  needTimeBark    db 'Not enough time, so not yet implemented... sorry :(',10,13,'sum and max must be > 0'
   stringFromInt   db 10 dup('$')
   maxInput        db 20
   inputLength     db 0h
@@ -440,11 +441,15 @@ countinueLoop:
   pop ax
   println sumBark
   println stringFromInt
-
+  mov ax,sum
+  cmp ax,0
+  js needTime
 
   jmp jumpOver
 overflow2:
   jmp overflow
+needTime:
+  throw needTimeBark
 divZ:
   jmp divZero
 jumpOver:
@@ -473,14 +478,16 @@ divMinNeg:
   call anyInt2String
   pop ax
   println stringFromInt
-
+  jmp divMax
+dZ:
+  throw divideByZeroError
 divMax:
   println divmaxBark
   xor dx, dx
   mov ax, sum
   mov bx, maxElem
   cmp bx,0
-  je divZero
+  je dZ
   cmp bx,0
   js divMaxNeg
   div bx
@@ -489,8 +496,9 @@ divMax:
   call anyInt2String
   pop ax
   println stringFromInt
-  jmp theEnd
+  endProcess
 divMaxNeg:
+  throw needTimeBark
   neg bx
   div bx
   neg ax
@@ -499,6 +507,7 @@ divMaxNeg:
   call anyInt2String
   pop ax
   println stringFromInt
+
 theEnd:
   endProcess
 divZero:
