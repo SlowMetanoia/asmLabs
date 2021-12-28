@@ -438,6 +438,8 @@ main:
 
   ;ввод значений
   ;_for forZeroInit, lab2InputForPred, Increment, lab2InputForBody, lab2Counter
+
+
   lea dx,lab2InputStart
   mov ah,0ah
   int 21h
@@ -477,6 +479,19 @@ loop2:
   println
   println lab2Output
 
+  ;data bios
+  mov ax, vmemory
+  mov si, ax
+  mov ax, bios
+  mov ds, ax
+
+  mov ah,0
+  mov al,3
+  int 10h
+
+  mov ,
+
+
 processEnd:
   nop
   mov ax, 4C00h
@@ -500,9 +515,12 @@ data segment
   str2            db 'testStr2$'
   testval         db 0h
 
+  vmemory         equ 0b800h
+  bios            equ 0FFFFh
   forTest1        db 7 dup(7)
   forTest2        db 7 dup(?)
 
+  biosData        db 40 dup(0)
   lab2InputStart  db 19
   lab2Counter     db 0h
   lab2Input       db 20 dup(?)
