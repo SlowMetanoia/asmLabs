@@ -489,7 +489,7 @@ loop2:
   mov al,3
   int 10h
 
-  mov ,
+
 
 
 processEnd:
